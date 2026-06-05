@@ -931,6 +931,7 @@ const render = (scene, progress) => {
 
 const scene = buildScene();
 const scrollSection = document.querySelector(".motion-scroll-section");
+const START_HOLD = 0.12;
 let progress = -1;
 let ticking = false;
 
@@ -939,7 +940,10 @@ const getScrollProgress = () => {
   const rect = scrollSection.getBoundingClientRect();
   const distance = rect.height - window.innerHeight;
   if (distance <= 0) return rect.top <= 0 ? 1 : 0;
-  return clamp(-rect.top / distance);
+  const rawProgress = clamp(-rect.top / distance);
+  return rawProgress <= START_HOLD
+    ? 0
+    : clamp((rawProgress - START_HOLD) / (1 - START_HOLD));
 };
 
 const updateFromScroll = () => {
