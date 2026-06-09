@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/preview",
+      "destination": "/v1_260605_client/index.html"
+    },
+    {
+      "source": "/preview/:path*",
+      "destination": "/v1_260605_client/:path*"
+    }
+  ]
+}
