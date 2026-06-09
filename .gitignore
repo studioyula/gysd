@@ -1,6 +1,7 @@
 .DS_Store
 archive/
 references/
+v2_260609_working/
 *.psd
 *_compare_preview.jpg
 *_upscaled_clean.png
