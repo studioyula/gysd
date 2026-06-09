@@ -1,4 +1,6 @@
 .DS_Store
+archive/
+references/
 *.psd
 *_compare_preview.jpg
 *_upscaled_clean.png
