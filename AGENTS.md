@@ -21,6 +21,7 @@ For HTML/CSS/JavaScript prototypes, static pages, local preview work, visual pol
 - Use the `html-vibe-coding-workflow` skill first.
 - Classify the edit depth before working.
 - Keep small text, spacing, image, and simple timing edits scoped and fast.
+- Unless BOMY explicitly asks otherwise, section height should default to the browser viewport height.
 
 ## Motion And Scroll Interaction Work
 

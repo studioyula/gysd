@@ -1,6 +1,16 @@
-const revealItems = document.querySelectorAll(".reveal");
+const revealItems = document.querySelectorAll(".reveal, .hero-section-reveal, .quote-text-reveal");
 const templateSection = document.querySelector("#template");
 const insightSection = document.querySelector("#insight");
+const templateTransitionStage = document.querySelector(".template-transition-stage");
+const templateTransitionTitle = document.querySelector(".template-transition-title .quote-heading");
+const templateTransitionContent = document.querySelector(".template-transition-content .template-row");
+const templateToSystemStage = document.querySelector(".template-to-system-stage");
+const templateToSystemSticky = document.querySelector(".template-to-system-sticky");
+const templateReadTitle = document.querySelector(".template-read-title");
+const templateFrameExit = document.querySelector(".template-frame-exit");
+const templateSystemEnter = document.querySelector(".template-system-enter");
+const imageFour = document.querySelector(".image-four-rise");
+const imageFourSection = document.querySelector(".image-four-section");
 
 const revealObserver = new IntersectionObserver(
   (entries) => {
@@ -18,7 +28,11 @@ const revealObserver = new IntersectionObserver(
 );
 
 revealItems.forEach((item, index) => {
-  item.style.transitionDelay = `${Math.min(index % 3, 2) * 90}ms`;
+  const delay = item.classList.contains("hero-section-reveal")
+    ? 280
+    : Math.min(index % 3, 2) * 90;
+
+  item.style.transitionDelay = `${delay}ms`;
 
   revealObserver.observe(item);
 });
@@ -34,18 +48,9 @@ const syncTemplateImageHeights = () => {
 const syncInsightImageHeight = () => {
   if (!insightSection) return;
 
-  const isSingleColumn = window.matchMedia("(max-width: 820px)").matches;
-  const copy = insightSection.querySelector(":scope > .copy:first-child");
   const image = insightSection.querySelector(":scope > .image-card");
 
-  if (!copy || !image) return;
-
-  if (isSingleColumn) {
-    image.style.height = "";
-    return;
-  }
-
-  image.style.height = `${Math.ceil(copy.getBoundingClientRect().height)}px`;
+  if (image) image.style.height = "";
 };
 
 const syncPairedImageHeights = () => {
@@ -53,8 +58,69 @@ const syncPairedImageHeights = () => {
   syncInsightImageHeight();
 };
 
+const clamp = (value, min = 0, max = 1) => Math.min(Math.max(value, min), max);
+
+const updateTemplateTransition = () => {
+  if (!templateTransitionStage || !templateTransitionTitle || !templateTransitionContent) return;
+
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  const stageRect = templateTransitionStage.getBoundingClientRect();
+  const scrollDistance = Math.max(templateTransitionStage.offsetHeight - viewportHeight, 1);
+  const progress = clamp((0 - stageRect.top) / scrollDistance);
+  const titleProgress = clamp((progress - .06) / .32);
+  const contentProgress = clamp((progress - .5) / .46);
+  const titleOpacity = 1 - titleProgress;
+
+  templateTransitionTitle.style.opacity = titleOpacity.toFixed(3);
+  templateTransitionTitle.style.transform = `translate3d(0, ${(-18 * titleProgress).toFixed(2)}px, 0)`;
+  templateTransitionContent.style.opacity = contentProgress.toFixed(3);
+  templateTransitionContent.style.transform = "translate3d(0, 0, 0)";
+};
+
+const mix = (start, end, progress) => start + (end - start) * progress;
+
+const updateTemplateToSystemTransition = () => {
+  if (!templateToSystemStage || !templateToSystemSticky || !templateReadTitle || !templateFrameExit || !templateSystemEnter) return;
+
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  const stageRect = templateToSystemStage.getBoundingClientRect();
+  const scrollDistance = Math.max(templateToSystemStage.offsetHeight - viewportHeight, 1);
+  const progress = clamp((0 - stageRect.top) / scrollDistance);
+  const readEnterProgress = clamp((progress - .06) / .14);
+  const readExitProgress = clamp((progress - .36) / .14);
+  const frameEnterProgress = clamp((progress - .56) / .14);
+  const frameExitProgress = clamp((progress - .8) / .12);
+  const bgProgress = clamp((progress - .9) / .06);
+  const enterProgress = clamp((progress - .955) / .045);
+  const bgValue = Math.round(mix(255, 17, bgProgress));
+
+  templateReadTitle.style.opacity = (readEnterProgress * (1 - readExitProgress)).toFixed(3);
+  templateReadTitle.style.transform = "translate3d(0, 0, 0)";
+  templateFrameExit.style.opacity = (frameEnterProgress * (1 - frameExitProgress)).toFixed(3);
+  templateFrameExit.style.transform = "translate3d(0, 0, 0)";
+  templateToSystemSticky.style.backgroundColor = `rgb(${bgValue}, ${bgValue}, ${bgValue})`;
+  templateSystemEnter.style.opacity = enterProgress.toFixed(3);
+  templateSystemEnter.style.transform = "translate3d(0, 0, 0)";
+};
+
+const updateImageFourRise = () => {
+  if (!imageFour || !imageFourSection) return;
+
+  const rect = imageFourSection.getBoundingClientRect();
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  const start = viewportHeight * 2.5;
+  const end = viewportHeight * .15;
+  const progress = clamp((start - rect.top) / (start - end));
+  const translateY = (1 - progress) * viewportHeight;
+
+  imageFour.style.transform = `translate3d(0, ${translateY}px, 0)`;
+};
+
 const updateLayout = () => {
   syncPairedImageHeights();
+  updateTemplateTransition();
+  updateTemplateToSystemTransition();
+  updateImageFourRise();
 };
 
 const initTypingEffect = () => {
@@ -143,5 +209,13 @@ if ("ResizeObserver" in window) {
 
 window.addEventListener("load", syncPairedImageHeights);
 window.addEventListener("resize", updateLayout);
+window.addEventListener("scroll", () => {
+  updateTemplateTransition();
+  updateTemplateToSystemTransition();
+  updateImageFourRise();
+}, { passive: true });
 syncPairedImageHeights();
+updateTemplateTransition();
+updateTemplateToSystemTransition();
+updateImageFourRise();
 initTypingEffect();
