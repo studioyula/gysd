@@ -79,7 +79,7 @@ const updateTemplateTransition = () => {
   const progress = clamp((0 - stageRect.top) / scrollDistance);
   const titleProgress = clamp((progress - .05) / .28);
   const contentEnterProgress = clamp((progress - .32) / .16);
-  const contentExitProgress = clamp((progress - .88) / .08);
+  const contentExitProgress = clamp((progress - .92) / .20);
   const contentOpacity = contentEnterProgress * (1 - contentExitProgress);
   const titleOpacity = 1 - titleProgress;
 
@@ -98,7 +98,7 @@ const updateTemplateToSystemTransition = () => {
   const stageRect = templateToSystemStage.getBoundingClientRect();
   const scrollDistance = Math.max(templateToSystemStage.offsetHeight - viewportHeight, 1);
   const progress = clamp((0 - stageRect.top) / scrollDistance);
-  const readEnterProgress = clamp((progress - .00) / .10);
+  const readEnterProgress = clamp((progress - .00) / .06);
   const readExitProgress = clamp((progress - .34) / .16);
   const frameEnterProgress = clamp((progress - .48) / .18);
   const frameExitProgress = clamp((progress - .84) / .08);
