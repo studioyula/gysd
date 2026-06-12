@@ -1363,6 +1363,10 @@ p + p {
     line-height: 30px;
   }
 
+  .image-six-caption br {
+    display: none;
+  }
+
   .split-section,
   .template-section {
     grid-template-columns: 1fr;
