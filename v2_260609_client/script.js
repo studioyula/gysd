@@ -79,7 +79,7 @@ const updateTemplateTransition = () => {
   const progress = clamp((0 - stageRect.top) / scrollDistance);
   const titleProgress = clamp((progress - .05) / .28);
   const contentEnterProgress = clamp((progress - .32) / .16);
-  const contentExitProgress = clamp((progress - .92) / .20);
+  const contentExitProgress = clamp((progress - .94) / .06);
   const contentOpacity = contentEnterProgress * (1 - contentExitProgress);
   const titleOpacity = 1 - titleProgress;
 
