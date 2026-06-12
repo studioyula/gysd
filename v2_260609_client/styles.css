@@ -316,6 +316,14 @@ p + p {
   min-height: 100vh;
 }
 
+.template-transition-sticky > .template-title-section,
+.template-to-system-sticky > .template-title-section {
+  left: calc(50% - 50vw);
+  right: auto;
+  width: 100vw;
+  padding-inline: var(--page-margin);
+}
+
 .template-transition-title .quote-heading,
 .template-transition-content .template-row {
   will-change: opacity, transform;
